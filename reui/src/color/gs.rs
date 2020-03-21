@@ -29,7 +29,7 @@ impl Into<u8> for GS {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct GS1;
 
-impl ColorFmt<usize> for GS1 {
+impl ColorFmt for GS1 {
     type ColorType = GS;
     type ColorBits = typenum::U1;
     const COLOR_BITS: usize = 1;
@@ -39,7 +39,7 @@ impl ColorFmt<usize> for GS1 {
     }
 }
 
-impl ColorGet<usize> for GS1 {
+impl ColorGet for GS1 {
     fn get_color(&self, buffer: &[u8], index: usize) -> Self::ColorType {
         let byte = buffer[index / 8];
         let bit = 1u8 << (index % 8);
@@ -49,7 +49,7 @@ impl ColorGet<usize> for GS1 {
     }
 }
 
-impl ColorSet<usize> for GS1 {
+impl ColorSet for GS1 {
     fn set_color(&self, buffer: &mut [u8], index: usize, color: Self::ColorType) {
         let byte = &mut buffer[index / 8];
         let bit = 1u8 << (index % 8);
@@ -65,7 +65,7 @@ impl ColorSet<usize> for GS1 {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct GS2;
 
-impl ColorFmt<usize> for GS2 {
+impl ColorFmt for GS2 {
     type ColorType = GS;
     type ColorBits = typenum::U2;
     const COLOR_BITS: usize = 2;
@@ -75,7 +75,7 @@ impl ColorFmt<usize> for GS2 {
     }
 }
 
-impl ColorGet<usize> for GS2 {
+impl ColorGet for GS2 {
     fn get_color(&self, buffer: &[u8], index: usize) -> Self::ColorType {
         let byte = buffer[index / 4];
         let off = (index % 4) * 2;
@@ -85,7 +85,7 @@ impl ColorGet<usize> for GS2 {
     }
 }
 
-impl ColorSet<usize> for GS2 {
+impl ColorSet for GS2 {
     fn set_color(&self, buffer: &mut [u8], index: usize, color: Self::ColorType) {
         let byte = &mut buffer[index / 4];
         let off = (index % 4) * 2;
@@ -98,7 +98,7 @@ impl ColorSet<usize> for GS2 {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct GS4;
 
-impl ColorFmt<usize> for GS4 {
+impl ColorFmt for GS4 {
     type ColorType = GS;
     type ColorBits = typenum::U4;
     const COLOR_BITS: usize = 4;
@@ -108,7 +108,7 @@ impl ColorFmt<usize> for GS4 {
     }
 }
 
-impl ColorGet<usize> for GS4 {
+impl ColorGet for GS4 {
     fn get_color(&self, buffer: &[u8], index: usize) -> Self::ColorType {
         let byte = buffer[index / 2];
         let off = (index % 2) * 4;
@@ -118,7 +118,7 @@ impl ColorGet<usize> for GS4 {
     }
 }
 
-impl ColorSet<usize> for GS4 {
+impl ColorSet for GS4 {
     fn set_color(&self, buffer: &mut [u8], index: usize, color: Self::ColorType) {
         let byte = &mut buffer[index / 2];
         let off = (index % 2) * 4;
@@ -131,7 +131,7 @@ impl ColorSet<usize> for GS4 {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct GS8;
 
-impl ColorFmt<usize> for GS8 {
+impl ColorFmt for GS8 {
     type ColorType = GS;
     type ColorBits = typenum::U8;
     const COLOR_BITS: usize = 8;
@@ -141,13 +141,13 @@ impl ColorFmt<usize> for GS8 {
     }
 }
 
-impl ColorGet<usize> for GS8 {
+impl ColorGet for GS8 {
     fn get_color(&self, buffer: &[u8], index: usize) -> Self::ColorType {
         Self::ColorType { v: buffer[index] }
     }
 }
 
-impl ColorSet<usize> for GS8 {
+impl ColorSet for GS8 {
     fn set_color(&self, buffer: &mut [u8], index: usize, color: Self::ColorType) {
         buffer[index] = color.v;
     }

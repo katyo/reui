@@ -2,7 +2,7 @@ use core::ops::Range;
 use typenum::Unsigned;
 
 /// Color format definition
-pub trait ColorFmt<Dim> {
+pub trait ColorFmt {
     /// The type of color data
     type ColorType;
 
@@ -13,111 +13,104 @@ pub trait ColorFmt<Dim> {
     const COLOR_BITS: usize;
 
     /// Measures the number of colors which can fit into buffer
-    fn num_colors(&self, buffer: &[u8]) -> Dim;
+    fn num_colors(&self, buffer: &[u8]) -> usize;
 }
 
 /// Color getter
-pub trait ColorGet<Dim>: ColorFmt<Dim> {
+pub trait ColorGet: ColorFmt {
     /// Gets color which located at specified index
-    fn get_color(&self, buffer: &[u8], index: Dim) -> Self::ColorType;
+    fn get_color(&self, buffer: &[u8], index: usize) -> Self::ColorType;
+
+    //// The type of iterator for colors
+    //type ColorIter: Iterator<Item = Self::ColorType>;
+
+    //// Gets colors at specified range by pieces of specified length with specified stride
+    //fn get_colors(&self, buffer: &[u8], range: Range<usize>, length: usize, stride: usize) -> Self::ColorIter;
 }
 
 /// Color setter
-pub trait ColorSet<Dim>: ColorFmt<Dim> {
+pub trait ColorSet: ColorFmt {
     /// Sets color which located at specified index
-    fn set_color(&self, buffer: &mut [u8], index: Dim, color: Self::ColorType);
+    fn set_color(&self, buffer: &mut [u8], index: usize, color: Self::ColorType);
+
+    //// Sets colors at specified range by pieces of specified length with specified stride
+    //fn set_colors(&self, buffer: &mut [u8], range: Range<usize>, length: usize, stride: usize, colors: &mut dyn Iterator<Item = Self::ColorType>);
 }
 
-/// Mass color getter
-pub trait ColorsGet<Dim>: ColorFmt<Dim> {
-    /// The type of iterator for colors
-    type ColorIter: Iterator<Item = Self::ColorType>;
-
-    /// Gets colors at specified range by pieces of specified length with specified stride
-    fn get_colors(&self, buffer: &[u8], range: Range<Dim>, length: Dim, stride: Dim) -> Self::ColorIter;
-}
-
-/// Mass color setter
-pub trait ColorsSet<Dim>: ColorFmt<Dim> {
-    /// Sets colors at specified range by pieces of specified length with specified stride
-    fn set_colors(&self, buffer: &mut [u8], range: Range<Dim>, length: Dim, stride: Dim, colors: &mut dyn Iterator<Item = Self::ColorType>);
-}
-
-pub trait ColorBuf<Fmt, Dim>
+pub trait ColorBuf<Fmt>
 where
-    Fmt: ColorGet<Dim>,
+    Fmt: ColorGet,
 {
     /// Number of colors in buffer
-    fn len(&self) -> Dim;
+    fn len(&self) -> usize;
 
     /// Get color from buffer by index
-    fn get(&self, index: Dim) -> Fmt::ColorType;
+    fn get(&self, index: usize) -> Fmt::ColorType;
+
+    //// Get colors at specified range by pieces of specified length with specified stride
+    //fn gets(&self, range: Range<usize>, length: usize, stride: usize) -> Fmt::ColorIter;
 }
 
-pub trait ColorBufMut<Fmt, Dim>
+pub trait ColorBufMut<Fmt>
 where
-    Fmt: ColorSet<Dim>,
+    Fmt: ColorSet,
 {
     /// Set color in buffer by index
-    fn set(&mut self, index: Dim, color: Fmt::ColorType);
+    fn set(&mut self, index: usize, color: Fmt::ColorType);
 }
 
-impl<Fmt, Dim, Buf> ColorBuf<Fmt, Dim> for (Buf,)
+impl<Fmt, Buf> ColorBuf<Fmt> for (Buf,)
 where
-    Fmt: ColorGet<Dim> + Default,
+    Fmt: ColorGet + Default,
     Buf: AsRef<[u8]>,
 {
-    fn len(&self) -> Dim {
+    fn len(&self) -> usize {
         Fmt::default().num_colors(self.0.as_ref())
     }
 
-    fn get(&self, index: Dim) -> Fmt::ColorType
-    where
-        Fmt: ColorGet<Dim>,
-    {
+    fn get(&self, index: usize) -> Fmt::ColorType {
         Fmt::default().get_color(self.0.as_ref(), index)
     }
+
+    /*fn gets(&self, range: Range<usize>, length: usize, stride: usize) -> Fmt::ColorIter {
+        Fmt::default().get_colors(self.0.as_ref(), range, length, stride)
+    }*/
 }
 
-impl<Fmt, Dim, Buf> ColorBufMut<Fmt, Dim> for (Buf,)
+impl<Fmt, Buf> ColorBufMut<Fmt> for (Buf,)
 where
-    Fmt: ColorSet<Dim> + Default,
+    Fmt: ColorSet + Default,
     Buf: AsMut<[u8]>,
 {
-    fn set(&mut self, index: Dim, color: Fmt::ColorType)
-    where
-        Fmt: ColorSet<Dim>,
-    {
+    fn set(&mut self, index: usize, color: Fmt::ColorType) {
         Fmt::default().set_color(self.0.as_mut(), index, color)
     }
 }
 
-impl<Fmt, Dim, Buf> ColorBuf<Fmt, Dim> for (Fmt, Buf)
+impl<Fmt, Buf> ColorBuf<Fmt> for (Fmt, Buf)
 where
-    Fmt: ColorGet<Dim> + Default,
+    Fmt: ColorGet + Default,
     Buf: AsRef<[u8]>,
 {
-    fn len(&self) -> Dim {
+    fn len(&self) -> usize {
         self.0.num_colors(self.1.as_ref())
     }
 
-    fn get(&self, index: Dim) -> Fmt::ColorType
-    where
-        Fmt: ColorGet<Dim>,
-    {
+    fn get(&self, index: usize) -> Fmt::ColorType {
         self.0.get_color(self.1.as_ref(), index)
     }
+
+    /*fn gets(&self, range: Range<usize>, length: usize, stride: usize) -> Fmt::ColorIter {
+        self.0.get_colors(self.1.as_ref(), range, length, stride)
+    }*/
 }
 
-impl<Fmt, Dim, Buf> ColorBufMut<Fmt, Dim> for (Fmt, Buf)
+impl<Fmt, Buf> ColorBufMut<Fmt> for (Fmt, Buf)
 where
-    Fmt: ColorSet<Dim> + Default,
+    Fmt: ColorSet + Default,
     Buf: AsMut<[u8]> + AsRef<Fmt>,
 {
-    fn set(&mut self, index: Dim, color: Fmt::ColorType)
-    where
-        Fmt: ColorSet<Dim>,
-    {
+    fn set(&mut self, index: usize, color: Fmt::ColorType) {
         self.0.set_color(self.1.as_mut(), index, color)
     }
 }

@@ -62,7 +62,7 @@ impl Into<GS> for RGB {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct RGB332;
 
-impl ColorFmt<usize> for RGB332 {
+impl ColorFmt for RGB332 {
     type ColorType = RGB;
     type ColorBits = typenum::U8;
     const COLOR_BITS: usize = 8;
@@ -72,7 +72,7 @@ impl ColorFmt<usize> for RGB332 {
     }
 }
 
-impl ColorGet<usize> for RGB332 {
+impl ColorGet for RGB332 {
     fn get_color(&self, buffer: &[u8], index: usize) -> Self::ColorType {
         let byte = buffer[index];
 
@@ -84,7 +84,7 @@ impl ColorGet<usize> for RGB332 {
     }
 }
 
-impl ColorSet<usize> for RGB332 {
+impl ColorSet for RGB332 {
     fn set_color(&self, buffer: &mut [u8], index: usize, RGB { r, g, b }: Self::ColorType) {
         buffer[index] = ((r >> (8 - 3)) << 5) | ((g >> (8 - 3)) << 2) | (b >> (8 - 2));
     }
@@ -98,7 +98,7 @@ impl ColorSet<usize> for RGB332 {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct RGB444;
 
-impl ColorFmt<usize> for RGB444 {
+impl ColorFmt for RGB444 {
     type ColorType = RGB;
     type ColorBits = typenum::U12;
     const COLOR_BITS: usize = 12;
@@ -108,7 +108,7 @@ impl ColorFmt<usize> for RGB444 {
     }
 }
 
-impl ColorGet<usize> for RGB444 {
+impl ColorGet for RGB444 {
     fn get_color(&self, buffer: &[u8], index: usize) -> Self::ColorType {
         let i = index * 3 / 2;
         let b0 = buffer[i];
@@ -132,7 +132,7 @@ impl ColorGet<usize> for RGB444 {
     }
 }
 
-impl ColorSet<usize> for RGB444 {
+impl ColorSet for RGB444 {
     fn set_color(&self, buffer: &mut [u8], index: usize, RGB { r, g, b }: Self::ColorType) {
         let i = index * 3 / 2;
         let bs = &mut buffer[i..i + 1];
@@ -159,7 +159,7 @@ impl ColorSet<usize> for RGB444 {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct RGB565;
 
-impl ColorFmt<usize> for RGB565 {
+impl ColorFmt for RGB565 {
     type ColorType = RGB;
     type ColorBits = typenum::U16;
     const COLOR_BITS: usize = 16;
@@ -169,7 +169,7 @@ impl ColorFmt<usize> for RGB565 {
     }
 }
 
-impl ColorGet<usize> for RGB565 {
+impl ColorGet for RGB565 {
     fn get_color(&self, buffer: &[u8], index: usize) -> Self::ColorType {
         let i = index * 2;
         let b0 = buffer[i + 0];
@@ -184,7 +184,7 @@ impl ColorGet<usize> for RGB565 {
     }
 }
 
-impl ColorSet<usize> for RGB565 {
+impl ColorSet for RGB565 {
     fn set_color(&self, buffer: &mut [u8], index: usize, RGB { r, g, b }: Self::ColorType) {
         let i = index * 2;
 
@@ -198,7 +198,7 @@ impl ColorSet<usize> for RGB565 {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct RGB888;
 
-impl ColorFmt<usize> for RGB888 {
+impl ColorFmt for RGB888 {
     type ColorType = RGB;
     type ColorBits = typenum::U24;
     const COLOR_BITS: usize = 24;
@@ -208,7 +208,7 @@ impl ColorFmt<usize> for RGB888 {
     }
 }
 
-impl ColorGet<usize> for RGB888 {
+impl ColorGet for RGB888 {
     fn get_color(&self, buffer: &[u8], index: usize) -> Self::ColorType {
         let i = index * 3;
 
@@ -220,7 +220,7 @@ impl ColorGet<usize> for RGB888 {
     }
 }
 
-impl ColorSet<usize> for RGB888 {
+impl ColorSet for RGB888 {
     fn set_color(&self, buffer: &mut [u8], index: usize, RGB { r, g, b }: Self::ColorType) {
         let i = index * 3;
 

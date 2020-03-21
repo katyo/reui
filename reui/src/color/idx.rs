@@ -1,69 +1,62 @@
 use core::marker::PhantomData;
 use super::{ColorFmt, ColorGet, ColorSet, ColorBuf};
-use crate::{IsIndex};
 
 /// 1-bit indexed color format
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
-pub struct IDX1<Fmt, Dim, Buf>
+pub struct IDX1<Fmt, Buf>
 where
-    Fmt: ColorGet<Dim>,
-    Buf: ColorBuf<Fmt, Dim>,
+    Fmt: ColorGet,
+    Buf: ColorBuf<Fmt>,
 {
     colors: Buf,
-    _phantom: PhantomData<(Fmt, Dim)>,
+    _phantom: PhantomData<Fmt>,
 }
 
-impl<Fmt, Dim, Buf> IDX1<Fmt, Dim, Buf>
+impl<Fmt, Buf> IDX1<Fmt, Buf>
 where
-    Fmt: ColorGet<Dim>,
-    Buf: ColorBuf<Fmt, Dim>,
+    Fmt: ColorGet,
+    Buf: ColorBuf<Fmt>,
 {
     pub fn new(colors: Buf) -> Self {
         Self { colors, _phantom: PhantomData }
     }
 }
 
-impl<Fmt, Dim, Buf> ColorFmt<Dim> for IDX1<Fmt, Dim, Buf>
+impl<Fmt, Buf> ColorFmt for IDX1<Fmt, Buf>
 where
-    Fmt: ColorGet<Dim>,
-    Dim: IsIndex,
-    Buf: ColorBuf<Fmt, Dim>,
+    Fmt: ColorGet,
+    Buf: ColorBuf<Fmt>,
 {
     type ColorType = Fmt::ColorType;
     type ColorBits = typenum::U1;
     const COLOR_BITS: usize = 1;
 
-    fn num_colors(&self, buffer: &[u8]) -> Dim {
-        Dim::from_index(buffer.len() * 8)
+    fn num_colors(&self, buffer: &[u8]) -> usize {
+        buffer.len() * 8
     }
 }
 
-impl<Fmt, Dim, Buf> ColorGet<Dim> for IDX1<Fmt, Dim, Buf>
+impl<Fmt, Buf> ColorGet for IDX1<Fmt, Buf>
 where
-    Fmt: ColorGet<Dim>,
-    Dim: IsIndex,
-    Buf: ColorBuf<Fmt, Dim>,
+    Fmt: ColorGet,
+    Buf: ColorBuf<Fmt>,
 {
-    fn get_color(&self, buffer: &[u8], index: Dim) -> Self::ColorType {
-        let index = index.into_index();
+    fn get_color(&self, buffer: &[u8], index: usize) -> Self::ColorType {
         let color_index = ((buffer[index / 8] >> (index % 8)) & 0b1) as usize;
 
-        self.colors.get(Dim::from_index(color_index))
+        self.colors.get(color_index)
     }
 }
 
-impl<Fmt, Dim, Buf> ColorSet<Dim> for IDX1<Fmt, Dim, Buf>
+impl<Fmt, Buf> ColorSet for IDX1<Fmt, Buf>
 where
-    Fmt: ColorGet<Dim> + ColorSet<Dim>,
+    Fmt: ColorGet + ColorSet,
     Fmt::ColorType: PartialEq,
-    Dim: IsIndex,
-    Buf: ColorBuf<Fmt, Dim>,
+    Buf: ColorBuf<Fmt>,
 {
-    fn set_color(&self, buffer: &mut [u8], index: Dim, color: Self::ColorType) {
-        let index = index.into_index();
-
+    fn set_color(&self, buffer: &mut [u8], index: usize, color: Self::ColorType) {
         (0usize..2).into_iter().filter_map(|color_index| {
-            if self.colors.get(Dim::from_index(color_index)) == color {
+            if self.colors.get(color_index) == color {
                 Some(color_index)
             } else {
                 None
@@ -82,69 +75,62 @@ where
 
 /// 2-bit indexed color format
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
-pub struct IDX2<Fmt, Dim, Buf>
+pub struct IDX2<Fmt, Buf>
 where
-    Fmt: ColorGet<Dim>,
-    Buf: ColorBuf<Fmt, Dim>,
+    Fmt: ColorGet,
+    Buf: ColorBuf<Fmt>,
 {
     colors: Buf,
-    _phantom: PhantomData<(Fmt, Dim)>,
+    _phantom: PhantomData<Fmt>,
 }
 
-impl<Fmt, Dim, Buf> IDX2<Fmt, Dim, Buf>
+impl<Fmt, Buf> IDX2<Fmt, Buf>
 where
-    Fmt: ColorGet<Dim>,
-    Buf: ColorBuf<Fmt, Dim>,
+    Fmt: ColorGet,
+    Buf: ColorBuf<Fmt>,
 {
     pub fn new(colors: Buf) -> Self {
         Self { colors, _phantom: PhantomData }
     }
 }
 
-impl<Fmt, Dim, Buf> ColorFmt<Dim> for IDX2<Fmt, Dim, Buf>
+impl<Fmt, Buf> ColorFmt for IDX2<Fmt, Buf>
 where
-    Fmt: ColorGet<Dim>,
-    Dim: IsIndex,
-    Buf: ColorBuf<Fmt, Dim>,
+    Fmt: ColorGet,
+    Buf: ColorBuf<Fmt>,
 {
     type ColorType = Fmt::ColorType;
     type ColorBits = typenum::U2;
     const COLOR_BITS: usize = 2;
 
-    fn num_colors(&self, buffer: &[u8]) -> Dim {
-        Dim::from_index(buffer.len() * 4)
+    fn num_colors(&self, buffer: &[u8]) -> usize {
+        buffer.len() * 4
     }
 }
 
-impl<Fmt, Dim, Buf> ColorGet<Dim> for IDX2<Fmt, Dim, Buf>
+impl<Fmt, Buf> ColorGet for IDX2<Fmt, Buf>
 where
-    Fmt: ColorGet<Dim>,
-    Dim: IsIndex,
-    Buf: ColorBuf<Fmt, Dim>,
+    Fmt: ColorGet,
+    Buf: ColorBuf<Fmt>,
 {
-    fn get_color(&self, buffer: &[u8], index: Dim) -> Self::ColorType {
-        let index = index.into_index();
-
+    fn get_color(&self, buffer: &[u8], index: usize) -> Self::ColorType {
         let byte = buffer[index / 4];
         let off = (index % 4) * 2;
         let color_index = ((byte >> off) & 0b11) as usize;
 
-        self.colors.get(Dim::from_index(color_index))
+        self.colors.get(color_index)
     }
 }
 
-impl<Fmt, Dim, Buf> ColorSet<Dim> for IDX2<Fmt, Dim, Buf>
+impl<Fmt, Buf> ColorSet for IDX2<Fmt, Buf>
 where
-    Fmt: ColorGet<Dim> + ColorSet<Dim>,
+    Fmt: ColorGet + ColorSet,
     Fmt::ColorType: PartialEq,
-    Dim: IsIndex,
-    Buf: ColorBuf<Fmt, Dim>,
+    Buf: ColorBuf<Fmt>,
 {
-    fn set_color(&self, buffer: &mut [u8], index: Dim, color: Self::ColorType) {
-        let index = index.into_index();
-
+    fn set_color(&self, buffer: &mut [u8], index: usize, color: Self::ColorType) {
         (0usize..4).into_iter().filter_map(|color_index| {
-            if self.colors.get(Dim::from_index(color_index)) == color {
+            if self.colors.get(color_index) == color {
                 Some(color_index as u8)
             } else {
                 None
@@ -160,69 +146,62 @@ where
 
 /// 4-bit indexed color format
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
-pub struct IDX4<Fmt, Dim, Buf>
+pub struct IDX4<Fmt, Buf>
 where
-    Fmt: ColorGet<Dim>,
-    Buf: ColorBuf<Fmt, Dim>,
+    Fmt: ColorGet,
+    Buf: ColorBuf<Fmt>,
 {
     colors: Buf,
-    _phantom: PhantomData<(Fmt, Dim)>,
+    _phantom: PhantomData<Fmt>,
 }
 
-impl<Fmt, Dim, Buf> IDX4<Fmt, Dim, Buf>
+impl<Fmt, Buf> IDX4<Fmt, Buf>
 where
-    Fmt: ColorGet<Dim>,
-    Buf: ColorBuf<Fmt, Dim>,
+    Fmt: ColorGet,
+    Buf: ColorBuf<Fmt>,
 {
     pub fn new(colors: Buf) -> Self {
         Self { colors, _phantom: PhantomData }
     }
 }
 
-impl<Fmt, Dim, Buf> ColorFmt<Dim> for IDX4<Fmt, Dim, Buf>
+impl<Fmt, Buf> ColorFmt for IDX4<Fmt, Buf>
 where
-    Fmt: ColorGet<Dim>,
-    Dim: IsIndex,
-    Buf: ColorBuf<Fmt, Dim>,
+    Fmt: ColorGet,
+    Buf: ColorBuf<Fmt>,
 {
     type ColorType = Fmt::ColorType;
     type ColorBits = typenum::U4;
     const COLOR_BITS: usize = 4;
 
-    fn num_colors(&self, buffer: &[u8]) -> Dim {
-        Dim::from_index(buffer.len() * 2)
+    fn num_colors(&self, buffer: &[u8]) -> usize {
+        buffer.len() * 2
     }
 }
 
-impl<Fmt, Dim, Buf> ColorGet<Dim> for IDX4<Fmt, Dim, Buf>
+impl<Fmt, Buf> ColorGet for IDX4<Fmt, Buf>
 where
-    Fmt: ColorGet<Dim>,
-    Dim: IsIndex,
-    Buf: ColorBuf<Fmt, Dim>,
+    Fmt: ColorGet,
+    Buf: ColorBuf<Fmt>,
 {
-    fn get_color(&self, buffer: &[u8], index: Dim) -> Self::ColorType {
-        let index = index.into_index();
-
+    fn get_color(&self, buffer: &[u8], index: usize) -> Self::ColorType {
         let byte = buffer[index / 2];
         let off = (index % 2) * 4;
         let color_index = ((byte >> off) & 0b1111) as usize;
 
-        self.colors.get(Dim::from_index(color_index))
+        self.colors.get(color_index)
     }
 }
 
-impl<Fmt, Dim, Buf> ColorSet<Dim> for IDX4<Fmt, Dim, Buf>
+impl<Fmt, Buf> ColorSet for IDX4<Fmt, Buf>
 where
-    Fmt: ColorGet<Dim> + ColorSet<Dim>,
+    Fmt: ColorGet + ColorSet,
     Fmt::ColorType: PartialEq,
-    Dim: IsIndex,
-    Buf: ColorBuf<Fmt, Dim>,
+    Buf: ColorBuf<Fmt>,
 {
-    fn set_color(&self, buffer: &mut [u8], index: Dim, color: Self::ColorType) {
-        let index = index.into_index();
-
+    fn set_color(&self, buffer: &mut [u8], index: usize, color: Self::ColorType) {
         (0usize..16).into_iter().filter_map(|color_index| {
-            if self.colors.get(Dim::from_index(color_index)) == color {
+            if self.colors.get(color_index) == color {
                 Some(color_index as u8)
             } else {
                 None
@@ -238,66 +217,60 @@ where
 
 /// 8-bit indexed color format
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
-pub struct IDX8<Fmt, Dim, Buf>
+pub struct IDX8<Fmt, Buf>
 where
-    Fmt: ColorGet<Dim>,
-    Buf: ColorBuf<Fmt, Dim>,
+    Fmt: ColorGet,
+    Buf: ColorBuf<Fmt>,
 {
     colors: Buf,
-    _phantom: PhantomData<(Fmt, Dim)>,
+    _phantom: PhantomData<Fmt>,
 }
 
-impl<Fmt, Dim, Buf> IDX8<Fmt, Dim, Buf>
+impl<Fmt, Buf> IDX8<Fmt, Buf>
 where
-    Fmt: ColorGet<Dim>,
-    Buf: ColorBuf<Fmt, Dim>,
+    Fmt: ColorGet,
+    Buf: ColorBuf<Fmt>,
 {
     pub fn new(colors: Buf) -> Self {
         Self { colors, _phantom: PhantomData }
     }
 }
 
-impl<Fmt, Dim, Buf> ColorFmt<Dim> for IDX8<Fmt, Dim, Buf>
+impl<Fmt, Buf> ColorFmt for IDX8<Fmt, Buf>
 where
-    Fmt: ColorGet<Dim>,
-    Dim: IsIndex,
-    Buf: ColorBuf<Fmt, Dim>,
+    Fmt: ColorGet,
+    Buf: ColorBuf<Fmt>,
 {
     type ColorType = Fmt::ColorType;
     type ColorBits = typenum::U8;
     const COLOR_BITS: usize = 8;
 
-    fn num_colors(&self, buffer: &[u8]) -> Dim {
-        Dim::from_index(buffer.len())
+    fn num_colors(&self, buffer: &[u8]) -> usize {
+        buffer.len()
     }
 }
 
-impl<Fmt, Dim, Buf> ColorGet<Dim> for IDX8<Fmt, Dim, Buf>
+impl<Fmt, Buf> ColorGet for IDX8<Fmt, Buf>
 where
-    Fmt: ColorGet<Dim>,
-    Dim: IsIndex,
-    Buf: ColorBuf<Fmt, Dim>,
+    Fmt: ColorGet,
+    Buf: ColorBuf<Fmt>,
 {
-    fn get_color(&self, buffer: &[u8], index: Dim) -> Self::ColorType {
-        let index = index.into_index();
+    fn get_color(&self, buffer: &[u8], index: usize) -> Self::ColorType {
         let color_index = buffer[index] as usize;
 
-        self.colors.get(Dim::from_index(color_index))
+        self.colors.get(color_index)
     }
 }
 
-impl<Fmt, Dim, Buf> ColorSet<Dim> for IDX8<Fmt, Dim, Buf>
+impl<Fmt, Buf> ColorSet for IDX8<Fmt, Buf>
 where
-    Fmt: ColorGet<Dim> + ColorSet<Dim>,
+    Fmt: ColorGet + ColorSet,
     Fmt::ColorType: PartialEq,
-    Dim: IsIndex,
-    Buf: ColorBuf<Fmt, Dim>,
+    Buf: ColorBuf<Fmt>,
 {
-    fn set_color(&self, buffer: &mut [u8], index: Dim, color: Self::ColorType) {
-        let index = index.into_index();
-
+    fn set_color(&self, buffer: &mut [u8], index: usize, color: Self::ColorType) {
         (0usize..256).into_iter().filter_map(|color_index| {
-            if self.colors.get(Dim::from_index(color_index)) == color {
+            if self.colors.get(color_index) == color {
                 Some(color_index as u8)
             } else {
                 None

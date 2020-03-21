@@ -1,4 +1,4 @@
-use crate::{IsIndex};
+use core::ops::Range;
 use super::{ColorFmt, ColorGet, ColorSet};
 
 /// Black and white color
@@ -24,35 +24,44 @@ impl Into<bool> for BW {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct BW1;
 
-impl<Dim> ColorFmt<Dim> for BW1
-where
-    Dim: IsIndex,
-{
+impl ColorFmt for BW1 {
     type ColorType = BW;
     type ColorBits = typenum::U1;
     const COLOR_BITS: usize = 1;
 
-    fn num_colors(&self, buffer: &[u8]) -> Dim {
-        Dim::from_index(buffer.len() * 8)
+    fn num_colors(&self, buffer: &[u8]) -> usize {
+        buffer.len() * 8
     }
 }
 
-impl<Dim> ColorGet<Dim> for BW1
-where
-    Dim: IsIndex,
-{
-    fn get_color(&self, buffer: &[u8], index: Dim) -> Self::ColorType {
-        let index = index.into_index();
+impl ColorGet for BW1 {
+    fn get_color(&self, buffer: &[u8], index: usize) -> Self::ColorType {
         Self::ColorType { v: buffer[index / 8] & (1u8 << (index % 8)) > 0 }
     }
+
+    /*type ColorIter = BW1Iter<'a>;
+
+    fn get_colors(&self, buffer: &[u8], range: Range<usize>, length: usize, stride: usize) -> Self::ColorIter {
+
+    }*/
 }
 
-impl<Dim> ColorSet<Dim> for BW1
-where
-    Dim: IsIndex,
-{
-    fn set_color(&self, buffer: &mut [u8], index: Dim, color: Self::ColorType) {
-        let index = index.into_index();
+/*pub struct BW1Iter<'b> {
+    buffer: &'b [u8],
+    byte: usize,
+    bit: u8,
+}
+
+impl<'b> Iterator for BW1Iter<'b> {
+    type Item = BW;
+
+    fn next(&mut self) -> Option<Self::Item> {
+
+    }
+}*/
+
+impl ColorSet for BW1 {
+    fn set_color(&self, buffer: &mut [u8], index: usize, color: Self::ColorType) {
         let cell = &mut buffer[index / 8];
         let bit = 1u8 << (index % 8);
         if color.v {
@@ -70,9 +79,8 @@ mod test {
     #[test]
     fn bw1_get() {
         let buf = [1, 2, 0];
-        let num: u8 = BW1.num_colors(&buf);
 
-        assert_eq!(num, 8 * 3);
+        assert_eq!(BW1.num_colors(&buf), 8 * 3);
         assert_eq!(BW1.get_color(&buf, 0), true.into());
         assert_eq!(BW1.get_color(&buf, 1), false.into());
         assert_eq!(BW1.get_color(&buf, 2), false.into());
@@ -84,9 +92,8 @@ mod test {
     #[test]
     fn bw1_set() {
         let mut buf = [1, 2, 0];
-        let num: usize = BW1.num_colors(&buf);
 
-        assert_eq!(num, 8 * 3);
+        assert_eq!(BW1.num_colors(&buf), 8 * 3);
         assert_eq!(BW1.get_color(&buf, 0), true.into());
         assert_eq!(BW1.get_color(&buf, 1), false.into());
         assert_eq!(BW1.get_color(&buf, 2), false.into());
