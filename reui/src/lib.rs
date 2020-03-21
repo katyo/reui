@@ -33,25 +33,13 @@ pixel_view!(IMAGE<2, 2, format::RGB332>: (format::RGB332, &IMAGE_DATA));
 mod geom;
 mod color;
 mod pixel;
+mod font;
 mod draw;
 
 pub use self::geom::*;
 pub use self::color::*;
 pub use self::pixel::*;
+pub use self::font::*;
 pub use self::draw::*;
 
-/// Font trait
-pub trait Font {
-    /// Pixel type
-    type Pix;
-
-    /// Dimension type
-    type Dim;
-
-    /// Glyph type
-    type Glyph;
-
-    fn size(glyph: Self::Glyph) -> (Self::Dim, Self::Dim);
-
-    fn draw(glyph: Self::Glyph);
-}
+pub use reui_macro::{embed_font};

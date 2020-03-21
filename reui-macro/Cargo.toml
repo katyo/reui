@@ -1,0 +1,23 @@
+[package]
+name = "reui-macro"
+version = "0.1.0"
+authors = ["K. <kayo@illumium.org>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[lib]
+proc-macro = true
+
+[dependencies]
+proc-macro2 = "^1"
+proc-macro-error = "^0.4"
+proc-macro-crate = "^0.1"
+syn = "^1"
+quote = "^1"
+bdf = "^0.5"
+png = "^0.16"
+
+[dev-dependencies.reui]
+version = "^0.1"
+path = "../reui"

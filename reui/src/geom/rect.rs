@@ -9,61 +9,70 @@ pub struct Rect<Dim> {
     pub size: Size<Dim>,
 }
 
-impl<Dim> Rect<Dim>
-where
-    Dim: Copy,
-{
-    pub fn new(point: Point<Dim>, size: Size<Dim>) -> Self {
+impl<Dim> Rect<Dim> {
+    pub const fn new(point: Point<Dim>, size: Size<Dim>) -> Self {
         Self { point, size }
     }
 
-    pub fn size(&self) -> Size<Dim> {
+    pub fn size(&self) -> Size<Dim>
+    where
+        Dim: Copy,
+    {
         self.size
     }
 
-    pub fn left(&self) -> Dim {
+    pub fn left(&self) -> Dim
+    where
+        Dim: Copy,
+    {
         self.point.x
     }
 
-    pub fn top(&self) -> Dim {
+    pub fn top(&self) -> Dim
+    where
+        Dim: Copy,
+    {
         self.point.y
     }
 
     pub fn right(&self) -> Dim
     where
-        Dim: Add<Output = Dim>,
+        Dim: Add<Output = Dim> + Copy,
     {
         self.point.x + self.size.w
     }
 
     pub fn bottom(&self) -> Dim
     where
-        Dim: Add<Output = Dim>,
+        Dim: Add<Output = Dim> + Copy,
     {
         self.point.y + self.size.h
     }
 
-    pub fn left_top(&self) -> Point<Dim> {
+    pub fn left_top(&self) -> Point<Dim>
+    where
+        Dim: Copy,
+    {
         self.point
     }
 
     pub fn left_bottom(&self) -> Point<Dim>
     where
-        Dim: Add<Output = Dim>,
+        Dim: Add<Output = Dim> + Copy,
     {
         Point::new(self.point.x, self.bottom())
     }
 
     pub fn right_top(&self) -> Point<Dim>
     where
-        Dim: Add<Output = Dim>,
+        Dim: Add<Output = Dim> + Copy,
     {
         Point::new(self.point.x + self.size.w, self.point.y)
     }
 
     pub fn right_bottom(&self) -> Point<Dim>
     where
-        Dim: Add<Output = Dim>,
+        Dim: Add<Output = Dim> + Copy,
     {
         Point::new(self.point.x + self.size.w, self.point.y + self.size.h)
     }
@@ -77,14 +86,14 @@ where
 
     pub fn to_local(&self, point: Point<Dim>) -> Point<Dim>
     where
-        Dim: Sub<Output = Dim>,
+        Dim: Sub<Output = Dim> + Copy,
     {
         Point::new(point.x - self.point.x, point.y - self.point.y)
     }
 
     pub fn to_global(&self, point: Point<Dim>) -> Point<Dim>
     where
-        Dim: Add<Output = Dim>,
+        Dim: Add<Output = Dim> + Copy,
     {
         Point::new(point.x + self.point.x, point.y + self.point.y)
     }
