@@ -72,7 +72,7 @@ where
         &self.rect
     }
 
-    fn pixels(&self, glyph: usize) -> PixelView<Fmt, (&Fmt, &[u8])> {
+    fn pixels(&self, glyph: usize) -> PixelView<(&Fmt, &[u8])> {
         let size = self.rect.size;
         let off = (size.area().as_() * Fmt::COLOR_BITS + 7) / 8;
         let data = &self.pixels[off * glyph ..];

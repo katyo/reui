@@ -86,7 +86,7 @@ where
         &self.glyphs[glyph].rect
     }
 
-    fn pixels(&self, glyph: usize) -> PixelView<Self::Fmt, (&Self::Fmt, &[u8])> {
+    fn pixels(&self, glyph: usize) -> PixelView<(&Self::Fmt, &[u8])> {
         let glyph_data = &self.glyphs[glyph];
         let size = glyph_data.rect.size;
         let data = &self.pixels[glyph_data.off.as_()..];

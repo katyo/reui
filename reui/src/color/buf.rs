@@ -101,7 +101,7 @@ where
     }
 }
 
-impl<Len, Fmt> ColorBuf<Fmt> for ColorArray<Len, Fmt>
+impl<Len, Fmt> ColorBuf for ColorArray<Len, Fmt>
 where
     Fmt: ColorGet,
     Fmt::ColorType: Default,
@@ -110,6 +110,8 @@ where
     Sum<Prod<Len, Fmt::ColorBits>, U7>: Div<U8>,
     Quot<Sum<Prod<Len, Fmt::ColorBits>, U7>, U8>: ArrayLength<u8>,
 {
+    type ColorFmt = Fmt;
+
     fn len(&self) -> usize {
         self.format.num_colors(self.data.as_ref())
     }
@@ -123,9 +125,9 @@ where
     }*/
 }
 
-impl<Len, Fmt> ColorBufMut<Fmt> for ColorArray<Len, Fmt>
+impl<Len, Fmt> ColorBufMut for ColorArray<Len, Fmt>
 where
-    Fmt: ColorSet,
+    Fmt: ColorGet + ColorSet,
     Fmt::ColorType: Default,
     Len: Mul<Fmt::ColorBits>,
     Prod<Len, Fmt::ColorBits>: Add<U7>,
@@ -140,7 +142,7 @@ where
     }
 }
 
-impl<'a, Len, Fmt> ColorBuf<Fmt> for &'a ColorArray<Len, Fmt>
+impl<'a, Len, Fmt> ColorBuf for &'a ColorArray<Len, Fmt>
 where
     Fmt: ColorGet,
     Fmt::ColorType: Default,
@@ -149,6 +151,8 @@ where
     Sum<Prod<Len, Fmt::ColorBits>, U7>: Div<U8>,
     Quot<Sum<Prod<Len, Fmt::ColorBits>, U7>, U8>: ArrayLength<u8>,
 {
+    type ColorFmt = Fmt;
+
     fn len(&self) -> usize {
         self.format.num_colors(self.data.as_ref())
     }
@@ -162,7 +166,7 @@ where
     }*/
 }
 
-impl<'a, Len, Fmt> ColorBuf<Fmt> for &'a mut ColorArray<Len, Fmt>
+impl<'a, Len, Fmt> ColorBuf for &'a mut ColorArray<Len, Fmt>
 where
     Fmt: ColorGet,
     Fmt::ColorType: Default,
@@ -171,6 +175,8 @@ where
     Sum<Prod<Len, Fmt::ColorBits>, U7>: Div<U8>,
     Quot<Sum<Prod<Len, Fmt::ColorBits>, U7>, U8>: ArrayLength<u8>,
 {
+    type ColorFmt = Fmt;
+
     fn len(&self) -> usize {
         self.format.num_colors(self.data.as_ref())
     }
@@ -184,9 +190,9 @@ where
     }*/
 }
 
-impl<'a, Len, Fmt> ColorBufMut<Fmt> for &'a mut ColorArray<Len, Fmt>
+impl<'a, Len, Fmt> ColorBufMut for &'a mut ColorArray<Len, Fmt>
 where
-    Fmt: ColorSet,
+    Fmt: ColorGet + ColorSet,
     Fmt::ColorType: Default,
     Len: Mul<Fmt::ColorBits>,
     Prod<Len, Fmt::ColorBits>: Add<U7>,

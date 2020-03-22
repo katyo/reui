@@ -24,5 +24,5 @@ pub trait Font {
     fn rect(&self, glyph: Self::Glyph) -> &Rect<Self::Dim>;
 
     /// Get bitmap for glyph
-    fn pixels(&self, glyph: usize) -> PixelView<Self::Fmt, (&Self::Fmt, &[u8])>;
+    fn pixels(&self, glyph: usize) -> PixelView<(&Self::Fmt, &[u8])>;
 }

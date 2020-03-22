@@ -5,8 +5,8 @@ use super::{ColorFmt, ColorGet, ColorSet, ColorBuf};
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct IDX1<Fmt, Buf>
 where
-    Fmt: ColorGet,
-    Buf: ColorBuf<Fmt>,
+    Fmt: ColorFmt,
+    Buf: ColorBuf<ColorFmt = Fmt>,
 {
     colors: Buf,
     _phantom: PhantomData<Fmt>,
@@ -14,8 +14,8 @@ where
 
 impl<Fmt, Buf> IDX1<Fmt, Buf>
 where
-    Fmt: ColorGet,
-    Buf: ColorBuf<Fmt>,
+    Fmt: ColorFmt,
+    Buf: ColorBuf<ColorFmt = Fmt>,
 {
     pub fn new(colors: Buf) -> Self {
         Self { colors, _phantom: PhantomData }
@@ -24,8 +24,8 @@ where
 
 impl<Fmt, Buf> ColorFmt for IDX1<Fmt, Buf>
 where
-    Fmt: ColorGet,
-    Buf: ColorBuf<Fmt>,
+    Fmt: ColorFmt,
+    Buf: ColorBuf<ColorFmt = Fmt>,
 {
     type ColorType = Fmt::ColorType;
     type ColorBits = typenum::U1;
@@ -39,7 +39,7 @@ where
 impl<Fmt, Buf> ColorGet for IDX1<Fmt, Buf>
 where
     Fmt: ColorGet,
-    Buf: ColorBuf<Fmt>,
+    Buf: ColorBuf<ColorFmt = Fmt>,
 {
     fn get_color(&self, buffer: &[u8], index: usize) -> Self::ColorType {
         let color_index = ((buffer[index / 8] >> (index % 8)) & 0b1) as usize;
@@ -52,7 +52,7 @@ impl<Fmt, Buf> ColorSet for IDX1<Fmt, Buf>
 where
     Fmt: ColorGet + ColorSet,
     Fmt::ColorType: PartialEq,
-    Buf: ColorBuf<Fmt>,
+    Buf: ColorBuf<ColorFmt = Fmt>,
 {
     fn set_color(&self, buffer: &mut [u8], index: usize, color: Self::ColorType) {
         (0usize..2).into_iter().filter_map(|color_index| {
@@ -77,8 +77,8 @@ where
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct IDX2<Fmt, Buf>
 where
-    Fmt: ColorGet,
-    Buf: ColorBuf<Fmt>,
+    Fmt: ColorFmt,
+    Buf: ColorBuf<ColorFmt = Fmt>,
 {
     colors: Buf,
     _phantom: PhantomData<Fmt>,
@@ -86,8 +86,8 @@ where
 
 impl<Fmt, Buf> IDX2<Fmt, Buf>
 where
-    Fmt: ColorGet,
-    Buf: ColorBuf<Fmt>,
+    Fmt: ColorFmt,
+    Buf: ColorBuf<ColorFmt = Fmt>,
 {
     pub fn new(colors: Buf) -> Self {
         Self { colors, _phantom: PhantomData }
@@ -96,8 +96,8 @@ where
 
 impl<Fmt, Buf> ColorFmt for IDX2<Fmt, Buf>
 where
-    Fmt: ColorGet,
-    Buf: ColorBuf<Fmt>,
+    Fmt: ColorFmt,
+    Buf: ColorBuf<ColorFmt = Fmt>,
 {
     type ColorType = Fmt::ColorType;
     type ColorBits = typenum::U2;
@@ -111,7 +111,7 @@ where
 impl<Fmt, Buf> ColorGet for IDX2<Fmt, Buf>
 where
     Fmt: ColorGet,
-    Buf: ColorBuf<Fmt>,
+    Buf: ColorBuf<ColorFmt = Fmt>,
 {
     fn get_color(&self, buffer: &[u8], index: usize) -> Self::ColorType {
         let byte = buffer[index / 4];
@@ -126,7 +126,7 @@ impl<Fmt, Buf> ColorSet for IDX2<Fmt, Buf>
 where
     Fmt: ColorGet + ColorSet,
     Fmt::ColorType: PartialEq,
-    Buf: ColorBuf<Fmt>,
+    Buf: ColorBuf<ColorFmt = Fmt>,
 {
     fn set_color(&self, buffer: &mut [u8], index: usize, color: Self::ColorType) {
         (0usize..4).into_iter().filter_map(|color_index| {
@@ -148,8 +148,8 @@ where
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct IDX4<Fmt, Buf>
 where
-    Fmt: ColorGet,
-    Buf: ColorBuf<Fmt>,
+    Fmt: ColorFmt,
+    Buf: ColorBuf<ColorFmt = Fmt>,
 {
     colors: Buf,
     _phantom: PhantomData<Fmt>,
@@ -157,8 +157,8 @@ where
 
 impl<Fmt, Buf> IDX4<Fmt, Buf>
 where
-    Fmt: ColorGet,
-    Buf: ColorBuf<Fmt>,
+    Fmt: ColorFmt,
+    Buf: ColorBuf<ColorFmt = Fmt>,
 {
     pub fn new(colors: Buf) -> Self {
         Self { colors, _phantom: PhantomData }
@@ -167,8 +167,8 @@ where
 
 impl<Fmt, Buf> ColorFmt for IDX4<Fmt, Buf>
 where
-    Fmt: ColorGet,
-    Buf: ColorBuf<Fmt>,
+    Fmt: ColorFmt,
+    Buf: ColorBuf<ColorFmt = Fmt>,
 {
     type ColorType = Fmt::ColorType;
     type ColorBits = typenum::U4;
@@ -182,7 +182,7 @@ where
 impl<Fmt, Buf> ColorGet for IDX4<Fmt, Buf>
 where
     Fmt: ColorGet,
-    Buf: ColorBuf<Fmt>,
+    Buf: ColorBuf<ColorFmt = Fmt>,
 {
     fn get_color(&self, buffer: &[u8], index: usize) -> Self::ColorType {
         let byte = buffer[index / 2];
@@ -197,7 +197,7 @@ impl<Fmt, Buf> ColorSet for IDX4<Fmt, Buf>
 where
     Fmt: ColorGet + ColorSet,
     Fmt::ColorType: PartialEq,
-    Buf: ColorBuf<Fmt>,
+    Buf: ColorBuf<ColorFmt = Fmt>,
 {
     fn set_color(&self, buffer: &mut [u8], index: usize, color: Self::ColorType) {
         (0usize..16).into_iter().filter_map(|color_index| {
@@ -219,8 +219,8 @@ where
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct IDX8<Fmt, Buf>
 where
-    Fmt: ColorGet,
-    Buf: ColorBuf<Fmt>,
+    Fmt: ColorFmt,
+    Buf: ColorBuf<ColorFmt = Fmt>,
 {
     colors: Buf,
     _phantom: PhantomData<Fmt>,
@@ -228,8 +228,8 @@ where
 
 impl<Fmt, Buf> IDX8<Fmt, Buf>
 where
-    Fmt: ColorGet,
-    Buf: ColorBuf<Fmt>,
+    Fmt: ColorFmt,
+    Buf: ColorBuf<ColorFmt = Fmt>,
 {
     pub fn new(colors: Buf) -> Self {
         Self { colors, _phantom: PhantomData }
@@ -238,8 +238,8 @@ where
 
 impl<Fmt, Buf> ColorFmt for IDX8<Fmt, Buf>
 where
-    Fmt: ColorGet,
-    Buf: ColorBuf<Fmt>,
+    Fmt: ColorFmt,
+    Buf: ColorBuf<ColorFmt = Fmt>,
 {
     type ColorType = Fmt::ColorType;
     type ColorBits = typenum::U8;
@@ -253,7 +253,7 @@ where
 impl<Fmt, Buf> ColorGet for IDX8<Fmt, Buf>
 where
     Fmt: ColorGet,
-    Buf: ColorBuf<Fmt>,
+    Buf: ColorBuf<ColorFmt = Fmt>,
 {
     fn get_color(&self, buffer: &[u8], index: usize) -> Self::ColorType {
         let color_index = buffer[index] as usize;
@@ -266,7 +266,7 @@ impl<Fmt, Buf> ColorSet for IDX8<Fmt, Buf>
 where
     Fmt: ColorGet + ColorSet,
     Fmt::ColorType: PartialEq,
-    Buf: ColorBuf<Fmt>,
+    Buf: ColorBuf<ColorFmt = Fmt>,
 {
     fn set_color(&self, buffer: &mut [u8], index: usize, color: Self::ColorType) {
         (0usize..256).into_iter().filter_map(|color_index| {

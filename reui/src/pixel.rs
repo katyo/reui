@@ -1,28 +1,23 @@
-use core::marker::PhantomData;
 use typenum::{Prod};
-use crate::{Point, Size, ColorGet, ColorSet, ColorBuf, ColorBufMut, ColorArray};
+use crate::{Point, Size, ColorFmt, ColorBuf, ColorBufMut, ColorArray};
 
 pub type PixelArray<W, H, Fmt> = ColorArray<Prod<W, H>, Fmt>;
 
-pub struct PixelView<Fmt, Buf>
-where
-    Fmt: ColorGet,
-    Buf: ColorBuf<Fmt>,
-{
-    pub data: Buf,
-    pub size: Size<usize>,
-    pub _phantom: PhantomData<Fmt>,
+pub struct PixelView<Buf> {
+    size: Size<usize>,
+    data: Buf,
 }
 
-impl<Fmt, Buf> PixelView<Fmt, Buf>
-where
-    Fmt: ColorGet,
-    Buf: ColorBuf<Fmt>,
-{
-    pub fn new(data: Buf, size: Size<usize>) -> Self {
-        Self { data, size, _phantom: PhantomData }
+impl<Buf> PixelView<Buf> {
+    pub const fn new(data: Buf, size: Size<usize>) -> Self {
+        Self { data, size }
     }
+}
 
+impl<Buf> PixelView<Buf>
+where
+    Buf: ColorBuf,
+{
     pub fn wrap(data: Buf) -> Self {
         Self::new(data, Size::default())
     }
@@ -40,16 +35,15 @@ where
         self.size
     }
 
-    pub fn get(&self, point: Point<usize>) -> Fmt::ColorType {
+    pub fn get(&self, point: Point<usize>) -> <Buf::ColorFmt as ColorFmt>::ColorType {
         let index = point.x + point.y * self.size.w;
 
         self.data.get(index)
     }
 
-    pub fn set(&mut self, point: Point<usize>, color: Fmt::ColorType)
+    pub fn set(&mut self, point: Point<usize>, color: <Buf::ColorFmt as ColorFmt>::ColorType)
     where
-        Fmt: ColorSet,
-        Buf: ColorBufMut<Fmt>,
+        Buf: ColorBufMut,
     {
         let index = point.x + point.y * self.size.w;
 
@@ -60,12 +54,8 @@ where
 #[macro_export]
 macro_rules! pixel_view {
     ($name: ident < $width: tt, $height: tt, $fmt: path > : $($data:tt)+ ) => {
-        static $name: $crate::PixelView<$fmt, ($fmt, &[u8])> =
-            $crate::PixelView {
-                data: $($data)+,
-                size: $crate::Size { w: $width, h: $height },
-                _phantom: core::marker::PhantomData,
-            };
+        static $name: $crate::PixelView<($fmt, &[u8])> =
+            $crate::PixelView::new($($data)+, $crate::Size::new($width, $height));
     };
 }
 
@@ -93,7 +83,7 @@ mod test {
         type Height = U162;
 
         let mut data = PixelArray::<Width, Height, Format>::new();
-        let mut view = PixelView::<Format, _>::new(&mut data, Size::new(Width::USIZE, Height::USIZE));
+        let mut view = PixelView::new(&mut data, Size::new(Width::USIZE, Height::USIZE));
 
         let size = view.size();
 
@@ -133,7 +123,7 @@ mod test {
         type Height = U162;
 
         let mut data = PixelArray::<Width, Height, Format>::new();
-        let mut view = PixelView::<Format, _>::new(&mut data, Size::new(Width::USIZE, Height::USIZE));
+        let mut view = PixelView::new(&mut data, Size::new(Width::USIZE, Height::USIZE));
 
         let size = view.size();
 
