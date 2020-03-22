@@ -1,4 +1,3 @@
-use core::ops::Range;
 use typenum::Unsigned;
 
 /// Color format definition
@@ -89,7 +88,7 @@ where
 
 impl<Fmt, Buf> ColorBuf<Fmt> for (Fmt, Buf)
 where
-    Fmt: ColorGet + Default,
+    Fmt: ColorGet,
     Buf: AsRef<[u8]>,
 {
     fn len(&self) -> usize {
@@ -107,7 +106,35 @@ where
 
 impl<Fmt, Buf> ColorBufMut<Fmt> for (Fmt, Buf)
 where
-    Fmt: ColorSet + Default,
+    Fmt: ColorSet,
+    Buf: AsMut<[u8]> + AsRef<Fmt>,
+{
+    fn set(&mut self, index: usize, color: Fmt::ColorType) {
+        self.0.set_color(self.1.as_mut(), index, color)
+    }
+}
+
+impl<Fmt, Buf> ColorBuf<Fmt> for (&Fmt, Buf)
+where
+    Fmt: ColorGet,
+    Buf: AsRef<[u8]>,
+{
+    fn len(&self) -> usize {
+        self.0.num_colors(self.1.as_ref())
+    }
+
+    fn get(&self, index: usize) -> Fmt::ColorType {
+        self.0.get_color(self.1.as_ref(), index)
+    }
+
+    /*fn gets(&self, range: Range<usize>, length: usize, stride: usize) -> Fmt::ColorIter {
+        self.0.get_colors(self.1.as_ref(), range, length, stride)
+    }*/
+}
+
+impl<Fmt, Buf> ColorBufMut<Fmt> for (&Fmt, Buf)
+where
+    Fmt: ColorSet,
     Buf: AsMut<[u8]> + AsRef<Fmt>,
 {
     fn set(&mut self, index: usize, color: Fmt::ColorType) {
