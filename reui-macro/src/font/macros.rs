@@ -2,23 +2,39 @@ use proc_macro2::{TokenStream, Literal};
 use proc_macro_error::abort;
 use quote::quote;
 
-use super::{FontParams, FontData, GlyphData, Rect};
+use super::{FontAttr, FontItem, FontData, GlyphData, Rect};
 use crate::utils::{uint_type_for_value, int_type_for_range, get_crate_name, get_source_path};
 
-impl FontParams {
+pub struct FontMacro {
+    attr: FontAttr,
+    item: FontItem,
+}
+
+impl FontMacro {
+    pub fn new(attr: FontAttr, item: FontItem) -> Self {
+        Self { attr, item }
+    }
+
     pub fn embed(&self) -> TokenStream {
-        let params = &self;
+        let core_crate = get_crate_name("reui", &self.item.ident.span());
 
-        let core_crate = get_crate_name("reui", &params.name.span());
-        let name = &params.name;
+        let attrs = &self.item.attrs;
 
-        let path = get_source_path(&params.path.value(), &params.path.span());
+        let vis = &self.item.vis;
 
-        let chrs = params.chrs.iter().map(|chr| chr.range()).collect::<Vec<_>>();
+        let static_token = &self.item.static_token;
 
-        let font_data = match FontData::load(&path, &chrs) {
+        let ident = &self.item.ident;
+
+        let path = get_source_path(&self.attr.path.value(), &self.attr.path.span());
+
+        let chars = self.attr.chars.iter()
+            .chain(self.item.chars.iter())
+            .map(|chr| chr.range()).collect::<Vec<_>>();
+
+        let font_data = match FontData::load(&path, &chars) {
             Ok(font_data) => font_data,
-            Err(error) => abort!(params.path, "Error when loading font: {}", error),
+            Err(error) => abort!(self.attr.path, "Error when loading font: {}", error),
         };
 
         let codes_list = font_data.codes.iter().map(|range| {
@@ -56,7 +72,8 @@ impl FontParams {
             };
 
             quote! {
-                pub static #name: #core_crate::FontV2<#core_crate::format::GS1, #dim_type, #code_type> =
+                #(#attrs)*
+                #vis #static_token #ident: #core_crate::FontV2<#core_crate::format::GS1, #dim_type, #code_type> =
                     #core_crate::FontV2::new(
                         #core_crate::format::GS1,
                         &[#(#codes_list),*],
@@ -84,7 +101,8 @@ impl FontParams {
             let off_type = uint_type_for_value(font_data.max_off().unwrap() as u32);
 
             quote! {
-                pub static #name: #core_crate::FontV1<#core_crate::format::GS1, #dim_type, #off_type, #code_type> =
+                #(#attrs)*
+                #vis #static_token #ident: #core_crate::FontV1<#core_crate::format::GS1, #dim_type, #off_type, #code_type> =
                     #core_crate::FontV1::new(
                         #core_crate::format::GS1,
                         &[#(#codes_list),*],

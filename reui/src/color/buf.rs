@@ -1,4 +1,4 @@
-use core::ops::{Add, Mul, Div, Range};
+use core::ops::{Add, Mul, Div};
 use typenum::{U7, U8, Sum, Prod, Quot};
 use generic_array::{GenericArray, ArrayLength};
 use super::{ColorFmt, ColorGet, ColorSet, ColorBuf, ColorBufMut};

@@ -1,4 +1,4 @@
-use core::ops::Range;
+//use core::ops::Range;
 use super::{ColorFmt, ColorGet, ColorSet};
 
 /// Black and white color

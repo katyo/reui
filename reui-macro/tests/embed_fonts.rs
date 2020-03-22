@@ -1,11 +1,20 @@
 use reui::{embed_font, Font};
 
-embed_font!(MONO4X6, "../fonts/4x6.bdf");
-embed_font!(MONO4X6_HEX, "../fonts/4x6.bdf", '0'..='9', 'A'..='F');
-embed_font!(MONO4X6_CYR, "../fonts/4x6.bdf",
-            '0'..='9', '+', '-', '*', '/', '=',
-            'a'..='z', 'A'..='Z', ',', '.', ';', '!', '?', '-', '"', '"', ' ',
-            'а'..='я', 'А'..='Я');
+/// Monospace font 4x6 (all glyphs)
+#[embed_font("../fonts/4x6.bdf")]
+pub static MONO4X6: Font = ();
+
+/// Monospace font 4x6 (hex glyphs)
+#[embed_font("../fonts/4x6.bdf", '0'..='9', 'A'..='F')]
+pub static MONO4X6_HEX: Font = ();
+
+/// Monospace font 4x6 (ASCII + Cyrillic glyphs)
+#[embed_font("../fonts/4x6.bdf", ' ')]
+pub static MONO4X6_CYR: Font = (
+    '0'..='9', '+', '-', '*', '/', '=',
+    'a'..='z', 'A'..='Z', ',', '.', ';', '!', '?', '-', '"',
+    'а'..='я', 'А'..='Я',
+);
 
 #[test]
 fn test_font_4x6() {
@@ -51,4 +60,6 @@ fn test_font_4x6_cyr() {
     assert_eq!(MONO4X6_CYR.glyph('я'), Some(137));
     assert_eq!(MONO4X6_CYR.glyph(' '), Some(0));
     assert_eq!(MONO4X6_CYR.glyph('.'), Some(7));
+    assert_eq!(MONO4X6_CYR.glyph('"'), Some(2));
+    assert_eq!(MONO4X6_CYR.glyph('\''), None);
 }

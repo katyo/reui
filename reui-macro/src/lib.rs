@@ -5,10 +5,13 @@ use proc_macro::TokenStream;
 use proc_macro_error::proc_macro_error;
 use syn::parse_macro_input;
 
-use font::FontParams;
+use font::{FontMacro, FontAttr, FontItem};
 
-#[proc_macro]
 #[proc_macro_error]
-pub fn embed_font(input: TokenStream) -> TokenStream {
-    parse_macro_input!(input as FontParams).embed().into()
+#[proc_macro_attribute]
+pub fn embed_font(attr_input: TokenStream, item_input: TokenStream) -> TokenStream {
+    FontMacro::new(
+        parse_macro_input!(attr_input as FontAttr),
+        parse_macro_input!(item_input as FontItem),
+    ).embed().into()
 }
