@@ -16,7 +16,7 @@ impl FontMacro {
     }
 
     pub fn embed(&self) -> TokenStream {
-        let core_crate = get_crate_name("reui", &self.item.ident.span());
+        let core_crate = get_crate_name("reui-core", &self.item.ident.span());
 
         let attrs = &self.item.attrs;
 
