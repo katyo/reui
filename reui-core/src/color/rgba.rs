@@ -113,7 +113,6 @@ impl ConstDefault for RGBA4444 {
 impl ColorFmt for RGBA4444 {
     type ColorType = RGBA;
     type ColorBits = typenum::U8;
-    const COLOR_BITS: usize = 16;
 
     fn num_colors(&self, buffer: &[u8]) -> usize {
         buffer.len() / 2
@@ -161,7 +160,6 @@ impl ConstDefault for RGBA5551 {
 impl ColorFmt for RGBA5551 {
     type ColorType = RGBA;
     type ColorBits = typenum::U8;
-    const COLOR_BITS: usize = 16;
 
     fn num_colors(&self, buffer: &[u8]) -> usize {
         buffer.len() / 2
@@ -209,7 +207,6 @@ impl ConstDefault for RGBA8888 {
 impl ColorFmt for RGBA8888 {
     type ColorType = RGBA;
     type ColorBits = typenum::U8;
-    const COLOR_BITS: usize = 16;
 
     fn num_colors(&self, buffer: &[u8]) -> usize {
         buffer.len() / 4

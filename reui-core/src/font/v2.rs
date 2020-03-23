@@ -3,6 +3,7 @@ use core::{
     marker::PhantomData,
     ops::{Sub, Mul, RangeInclusive},
 };
+use typenum::Unsigned;
 use num_traits::AsPrimitive;
 use crate::{Rect, ColorGet, Font, PixelView};
 
@@ -74,9 +75,9 @@ where
 
     fn pixels(&self, glyph: usize) -> PixelView<(&Fmt, &[u8])> {
         let size = self.rect.size;
-        let off = (size.area().as_() * Fmt::COLOR_BITS + 7) / 8;
+        let off = (size.area().as_() * Fmt::ColorBits::USIZE + 7) / 8;
         let data = &self.pixels[off * glyph ..];
-        PixelView::new((&self.format, data), size.as_())
+        PixelView::new(size.as_(), (&self.format, data))
     }
 }
 

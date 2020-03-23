@@ -37,7 +37,6 @@ impl ConstDefault for GS1 {
 impl ColorFmt for GS1 {
     type ColorType = GS;
     type ColorBits = typenum::U1;
-    const COLOR_BITS: usize = 1;
 
     fn num_colors(&self, buffer: &[u8]) -> usize {
         buffer.len() * 8
@@ -77,7 +76,6 @@ impl ConstDefault for GS2 {
 impl ColorFmt for GS2 {
     type ColorType = GS;
     type ColorBits = typenum::U2;
-    const COLOR_BITS: usize = 2;
 
     fn num_colors(&self, buffer: &[u8]) -> usize {
         buffer.len() * 4
@@ -114,7 +112,6 @@ impl ConstDefault for GS4 {
 impl ColorFmt for GS4 {
     type ColorType = GS;
     type ColorBits = typenum::U4;
-    const COLOR_BITS: usize = 4;
 
     fn num_colors(&self, buffer: &[u8]) -> usize {
         buffer.len() * 2
@@ -151,7 +148,6 @@ impl ConstDefault for GS8 {
 impl ColorFmt for GS8 {
     type ColorType = GS;
     type ColorBits = typenum::U8;
-    const COLOR_BITS: usize = 8;
 
     fn num_colors(&self, buffer: &[u8]) -> usize {
         buffer.len()

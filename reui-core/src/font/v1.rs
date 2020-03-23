@@ -90,7 +90,7 @@ where
         let glyph_data = &self.glyphs[glyph];
         let size = glyph_data.rect.size;
         let data = &self.pixels[glyph_data.off.as_()..];
-        PixelView::new((&self.format, data), size.as_())
+        PixelView::new(size.as_(), (&self.format, data))
     }
 }
 

@@ -8,9 +8,6 @@ pub trait ColorFmt {
     /// The packed size of color in number of bits (typenum)
     type ColorBits: Unsigned;
 
-    /// The packed size of color in number of bits (constant)
-    const COLOR_BITS: usize;
-
     /// Measures the number of colors which can fit into buffer
     fn num_colors(&self, buffer: &[u8]) -> usize;
 }
@@ -59,10 +56,7 @@ where
     Fmt: ColorFmt,
 {
     type ColorType = Fmt::ColorType;
-
     type ColorBits = Fmt::ColorBits;
-
-    const COLOR_BITS: usize = Fmt::COLOR_BITS;
 
     fn num_colors(&self, buffer: &[u8]) -> usize {
         (*self).num_colors(buffer)

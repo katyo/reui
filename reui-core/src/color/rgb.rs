@@ -70,7 +70,6 @@ impl ConstDefault for RGB332 {
 impl ColorFmt for RGB332 {
     type ColorType = RGB;
     type ColorBits = typenum::U8;
-    const COLOR_BITS: usize = 8;
 
     fn num_colors(&self, buffer: &[u8]) -> usize {
         buffer.len()
@@ -110,7 +109,6 @@ impl ConstDefault for RGB444 {
 impl ColorFmt for RGB444 {
     type ColorType = RGB;
     type ColorBits = typenum::U12;
-    const COLOR_BITS: usize = 12;
 
     fn num_colors(&self, buffer: &[u8]) -> usize {
         buffer.len() * 2 / 3
@@ -175,7 +173,6 @@ impl ConstDefault for RGB565 {
 impl ColorFmt for RGB565 {
     type ColorType = RGB;
     type ColorBits = typenum::U16;
-    const COLOR_BITS: usize = 16;
 
     fn num_colors(&self, buffer: &[u8]) -> usize {
         buffer.len() / 2
@@ -218,7 +215,6 @@ impl ConstDefault for RGB888 {
 impl ColorFmt for RGB888 {
     type ColorType = RGB;
     type ColorBits = typenum::U24;
-    const COLOR_BITS: usize = 24;
 
     fn num_colors(&self, buffer: &[u8]) -> usize {
         buffer.len() / 3

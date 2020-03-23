@@ -29,7 +29,6 @@ where
 {
     type ColorType = Fmt::ColorType;
     type ColorBits = typenum::U1;
-    const COLOR_BITS: usize = 1;
 
     fn num_colors(&self, buffer: &[u8]) -> usize {
         buffer.len() * 8
@@ -101,7 +100,6 @@ where
 {
     type ColorType = Fmt::ColorType;
     type ColorBits = typenum::U2;
-    const COLOR_BITS: usize = 2;
 
     fn num_colors(&self, buffer: &[u8]) -> usize {
         buffer.len() * 4
@@ -172,7 +170,6 @@ where
 {
     type ColorType = Fmt::ColorType;
     type ColorBits = typenum::U4;
-    const COLOR_BITS: usize = 4;
 
     fn num_colors(&self, buffer: &[u8]) -> usize {
         buffer.len() * 2
@@ -243,7 +240,6 @@ where
 {
     type ColorType = Fmt::ColorType;
     type ColorBits = typenum::U8;
-    const COLOR_BITS: usize = 8;
 
     fn num_colors(&self, buffer: &[u8]) -> usize {
         buffer.len()

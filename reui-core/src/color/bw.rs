@@ -32,7 +32,6 @@ impl ConstDefault for BW1 {
 impl ColorFmt for BW1 {
     type ColorType = BW;
     type ColorBits = typenum::U1;
-    const COLOR_BITS: usize = 1;
 
     fn num_colors(&self, buffer: &[u8]) -> usize {
         buffer.len() * 8

@@ -67,7 +67,6 @@ impl ConstDefault for GSA11 {
 impl ColorFmt for GSA11 {
     type ColorType = GSA;
     type ColorBits = typenum::U2;
-    const COLOR_BITS: usize = 2;
 
     fn num_colors(&self, buffer: &[u8]) -> usize {
         buffer.len() * 4
@@ -113,7 +112,6 @@ impl ConstDefault for GSA22 {
 impl ColorFmt for GSA22 {
     type ColorType = GSA;
     type ColorBits = typenum::U4;
-    const COLOR_BITS: usize = 4;
 
     fn num_colors(&self, buffer: &[u8]) -> usize {
         buffer.len() * 2
@@ -151,7 +149,6 @@ impl ConstDefault for GSA31 {
 impl ColorFmt for GSA31 {
     type ColorType = GSA;
     type ColorBits = typenum::U4;
-    const COLOR_BITS: usize = 4;
 
     fn num_colors(&self, buffer: &[u8]) -> usize {
         buffer.len() * 2
@@ -189,7 +186,6 @@ impl ConstDefault for GSA44 {
 impl ColorFmt for GSA44 {
     type ColorType = GSA;
     type ColorBits = typenum::U8;
-    const COLOR_BITS: usize = 8;
 
     fn num_colors(&self, buffer: &[u8]) -> usize {
         buffer.len()
@@ -222,7 +218,6 @@ impl ConstDefault for GSA71 {
 impl ColorFmt for GSA71 {
     type ColorType = GSA;
     type ColorBits = typenum::U8;
-    const COLOR_BITS: usize = 8;
 
     fn num_colors(&self, buffer: &[u8]) -> usize {
         buffer.len()
