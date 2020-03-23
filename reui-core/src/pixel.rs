@@ -3,23 +3,19 @@ use crate::{Point, Size, ColorFmt, ColorBuf, ColorBufMut, ColorArray};
 
 pub type PixelArray<W, H, Fmt> = ColorArray<Prod<W, H>, Fmt>;
 
+#[derive(Debug, Clone)]
 pub struct PixelView<Buf> {
     size: Size<usize>,
     data: Buf,
 }
 
 impl<Buf> PixelView<Buf> {
-    pub const fn new(data: Buf, size: Size<usize>) -> Self {
-        Self { data, size }
+    pub const fn new(size: Size<usize>, data: Buf) -> Self {
+        Self { size, data }
     }
-}
 
-impl<Buf> PixelView<Buf>
-where
-    Buf: ColorBuf,
-{
     pub fn wrap(data: Buf) -> Self {
-        Self::new(data, Size::default())
+        Self::new(Size::default(), data)
     }
 
     pub fn with_size(mut self, size: Size<usize>) -> Self {
@@ -34,7 +30,12 @@ where
     pub fn size(&self) -> Size<usize> {
         self.size
     }
+}
 
+impl<Buf> PixelView<Buf>
+where
+    Buf: ColorBuf,
+{
     pub fn get(&self, point: Point<usize>) -> <Buf::ColorFmt as ColorFmt>::ColorType {
         let index = point.x + point.y * self.size.w;
 
@@ -54,8 +55,8 @@ where
 #[macro_export]
 macro_rules! pixel_view {
     ($name: ident < $width: tt, $height: tt, $fmt: path > : $($data:tt)+ ) => {
-        static $name: $crate::PixelView<($fmt, &[u8])> =
-            $crate::PixelView::new($($data)+, $crate::Size::new($width, $height));
+        pub static $name: $crate::PixelView<(&$fmt, &[u8])> =
+            $crate::PixelView::new($crate::Size::new($width, $height), $($data)+);
     };
 }
 
@@ -68,7 +69,7 @@ mod test {
     fn test_image() {
         static IMAGE_DATA: [u8; 4] = [1, 97, 186, 44];
 
-        pixel_view!(IMAGE<2, 2, format::RGB332>: (format::RGB332, &IMAGE_DATA));
+        pixel_view!(IMAGE<2, 2, format::RGB332>: (&format::RGB332::DEFAULT, &IMAGE_DATA));
 
         assert_eq!(IMAGE.get(Point::new(0, 0)), RGB::new(0, 0, 85));
         assert_eq!(IMAGE.get(Point::new(1, 0)), RGB::new(108, 0, 85));
@@ -83,7 +84,7 @@ mod test {
         type Height = U162;
 
         let mut data = PixelArray::<Width, Height, Format>::new();
-        let mut view = PixelView::new(&mut data, Size::new(Width::USIZE, Height::USIZE));
+        let mut view = PixelView::new(Size::new(Width::USIZE, Height::USIZE), &mut data);
 
         let size = view.size();
 
@@ -123,7 +124,7 @@ mod test {
         type Height = U162;
 
         let mut data = PixelArray::<Width, Height, Format>::new();
-        let mut view = PixelView::new(&mut data, Size::new(Width::USIZE, Height::USIZE));
+        let mut view = PixelView::new(Size::new(Width::USIZE, Height::USIZE), &mut data);
 
         let size = view.size();
 
