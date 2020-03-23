@@ -29,7 +29,7 @@ impl FontMacro {
         let path = get_source_path(&self.attr.path.value(), &self.attr.path.span());
 
         let chars = self.attr.chars.iter()
-            .chain(self.item.chars.iter())
+            .chain(self.item.value.chars.iter())
             .map(|chr| chr.range()).collect::<Vec<_>>();
 
         let font_data = match FontData::load(&path, &chars) {

@@ -1,4 +1,5 @@
 pub(crate) mod utils;
+pub(crate) mod parse;
 pub(crate) mod font;
 
 use proc_macro::TokenStream;
