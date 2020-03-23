@@ -1,12 +1,13 @@
 use syn::{
     token::{Comma, Paren},
     Result,
+    Ident,
     parenthesized,
     punctuated::Punctuated,
-    parse::{Parse, ParseStream},
+    parse::{ParseStream},
 };
 
-use crate::parse::StaticItem;
+use crate::parse::{StaticItem, StaticValueParse};
 use super::FontChars;
 
 pub type FontItem = StaticItem<FontTypeKeyword, FontItemValue>;
@@ -16,8 +17,8 @@ pub struct FontItemValue {
     pub chars: Punctuated<FontChars, Comma>,
 }
 
-impl Parse for FontItemValue {
-    fn parse(input: ParseStream) -> Result<Self> {
+impl StaticValueParse<FontTypeKeyword> for FontItemValue {
+    fn parse_static_value(input: ParseStream, _ident: &Ident, _ty: &FontTypeKeyword) -> Result<Self> {
         let chars_content;
         Ok(Self {
             paren_token: parenthesized!(chars_content in input),

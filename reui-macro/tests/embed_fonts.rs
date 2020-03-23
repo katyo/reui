@@ -1,15 +1,15 @@
-use reui::{embed_font, Font};
+use reui::{embed, Font};
 
 /// Monospace font 4x6 (all glyphs)
-#[embed_font("../fonts/4x6.bdf")]
+#[embed("../fonts/4x6.bdf")]
 pub static MONO4X6: Font = ();
 
 /// Monospace font 4x6 (hex glyphs)
-#[embed_font("../fonts/4x6.bdf", '0'..='9', 'A'..='F')]
+#[embed("../fonts/4x6.bdf", '0'..='9', 'A'..='F')]
 pub static MONO4X6_HEX: Font = ();
 
 /// Monospace font 4x6 (ASCII + Cyrillic glyphs)
-#[embed_font("../fonts/4x6.bdf", ' ')]
+#[embed("../fonts/4x6.bdf", ' ')]
 pub static MONO4X6_CYR: Font = (
     '0'..='9', '+', '-', '*', '/', '=',
     'a'..='z', 'A'..='Z', ',', '.', ';', '!', '?', '-', '"',

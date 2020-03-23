@@ -2,10 +2,11 @@ use syn::{
     token::{Paren},
     Result,
     parenthesized,
-    parse::{Parse, ParseStream},
+    Ident,
+    parse::{ParseStream},
 };
 
-use crate::parse::StaticItem;
+use crate::parse::{StaticItem, StaticValueParse};
 
 pub type ImageItem = StaticItem<ImageTypeKeyword, ImageItemValue>;
 
@@ -13,8 +14,8 @@ pub struct ImageItemValue {
     pub paren_token: Paren,
 }
 
-impl Parse for ImageItemValue {
-    fn parse(input: ParseStream) -> Result<Self> {
+impl StaticValueParse<ImageTypeKeyword> for ImageItemValue {
+    fn parse_static_value(input: ParseStream, _ident: &Ident, _ty: &ImageTypeKeyword) -> Result<Self> {
         let _content;
         Ok(Self {
             paren_token: parenthesized!(_content in input),

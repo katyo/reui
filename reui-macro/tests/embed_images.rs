@@ -1,21 +1,21 @@
-use reui::{embed_image, Size, Point, GS, GSA, RGB, RGBA};
+use reui::{embed, Size, Point, GS, GSA, RGB, RGBA};
 
-#[embed_image("../images/gs_2x2.png")]
+#[embed("../images/gs_2x2.png")]
 pub static GS_2X2: Image = ();
 
-#[embed_image("../images/gsa_2x2.png")]
+#[embed("../images/gsa_2x2.png")]
 pub static GSA_2X2: Image = ();
 
-#[embed_image("../images/rgb_2x2.png")]
+#[embed("../images/rgb_2x2.png")]
 pub static RGB_2X2: Image = ();
 
-#[embed_image("../images/rgba_2x2.png")]
+#[embed("../images/rgba_2x2.png")]
 pub static RGBA_2X2: Image = ();
 
-#[embed_image("../images/idx_2x2.png")]
+#[embed("../images/idx_2x2.png")]
 pub static IDX_2X2: Image = ();
 
-#[embed_image("../images/idxa_2x2.png")]
+#[embed("../images/idxa_2x2.png")]
 pub static IDXA_2X2: Image = ();
 
 #[test]
