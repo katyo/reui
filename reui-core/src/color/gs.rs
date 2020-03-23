@@ -1,3 +1,4 @@
+use crate::{ConstDefault};
 use super::{ColorFmt, ColorGet, ColorSet};
 
 /// Grayscale
@@ -28,6 +29,10 @@ impl Into<u8> for GS {
 /// 1-bit grayscale color
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct GS1;
+
+impl ConstDefault for GS1 {
+    const DEFAULT: Self = Self;
+}
 
 impl ColorFmt for GS1 {
     type ColorType = GS;
@@ -65,6 +70,10 @@ impl ColorSet for GS1 {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct GS2;
 
+impl ConstDefault for GS2 {
+    const DEFAULT: Self = Self;
+}
+
 impl ColorFmt for GS2 {
     type ColorType = GS;
     type ColorBits = typenum::U2;
@@ -98,6 +107,10 @@ impl ColorSet for GS2 {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct GS4;
 
+impl ConstDefault for GS4 {
+    const DEFAULT: Self = Self;
+}
+
 impl ColorFmt for GS4 {
     type ColorType = GS;
     type ColorBits = typenum::U4;
@@ -130,6 +143,10 @@ impl ColorSet for GS4 {
 /// 8-bit grayscale color
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct GS8;
+
+impl ConstDefault for GS8 {
+    const DEFAULT: Self = Self;
+}
 
 impl ColorFmt for GS8 {
     type ColorType = GS;

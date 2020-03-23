@@ -1,3 +1,4 @@
+use crate::{ConstDefault};
 use super::{ColorFmt, ColorGet, ColorSet, GS, GSA, RGB};
 
 /// RGB with alpha
@@ -105,6 +106,10 @@ impl Into<RGB> for RGBA {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct RGBA4444;
 
+impl ConstDefault for RGBA4444 {
+    const DEFAULT: Self = Self;
+}
+
 impl ColorFmt for RGBA4444 {
     type ColorType = RGBA;
     type ColorBits = typenum::U8;
@@ -149,6 +154,10 @@ impl ColorSet for RGBA4444 {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct RGBA5551;
 
+impl ConstDefault for RGBA5551 {
+    const DEFAULT: Self = Self;
+}
+
 impl ColorFmt for RGBA5551 {
     type ColorType = RGBA;
     type ColorBits = typenum::U8;
@@ -192,6 +201,10 @@ impl ColorSet for RGBA5551 {
 /// `0bRRRRRRRR 0bGGGGGGGG 0bBBBBBBBB 0bAAAAAAAA`
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct RGBA8888;
+
+impl ConstDefault for RGBA8888 {
+    const DEFAULT: Self = Self;
+}
 
 impl ColorFmt for RGBA8888 {
     type ColorType = RGBA;

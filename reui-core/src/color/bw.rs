@@ -1,4 +1,5 @@
 //use core::ops::Range;
+use crate::{ConstDefault};
 use super::{ColorFmt, ColorGet, ColorSet};
 
 /// Black and white color
@@ -23,6 +24,10 @@ impl Into<bool> for BW {
 /// 1-bit black/white color format
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct BW1;
+
+impl ConstDefault for BW1 {
+    const DEFAULT: Self = Self;
+}
 
 impl ColorFmt for BW1 {
     type ColorType = BW;

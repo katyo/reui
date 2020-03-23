@@ -1,3 +1,4 @@
+use crate::{ConstDefault};
 use super::{ColorFmt, ColorGet, ColorSet, GS};
 
 /// Grayscale with alpha
@@ -59,6 +60,10 @@ impl Into<GS> for GSA {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct GSA11;
 
+impl ConstDefault for GSA11 {
+    const DEFAULT: Self = Self;
+}
+
 impl ColorFmt for GSA11 {
     type ColorType = GSA;
     type ColorBits = typenum::U2;
@@ -101,6 +106,10 @@ impl ColorSet for GSA11 {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct GSA22;
 
+impl ConstDefault for GSA22 {
+    const DEFAULT: Self = Self;
+}
+
 impl ColorFmt for GSA22 {
     type ColorType = GSA;
     type ColorBits = typenum::U4;
@@ -134,6 +143,10 @@ impl ColorSet for GSA22 {
 /// 3-bit grayscale color with 1-bit alpha channel
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct GSA31;
+
+impl ConstDefault for GSA31 {
+    const DEFAULT: Self = Self;
+}
 
 impl ColorFmt for GSA31 {
     type ColorType = GSA;
@@ -169,6 +182,10 @@ impl ColorSet for GSA31 {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct GSA44;
 
+impl ConstDefault for GSA44 {
+    const DEFAULT: Self = Self;
+}
+
 impl ColorFmt for GSA44 {
     type ColorType = GSA;
     type ColorBits = typenum::U8;
@@ -197,6 +214,10 @@ impl ColorSet for GSA44 {
 /// 7-bit grayscale color with 1-bit alpha channel
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct GSA71;
+
+impl ConstDefault for GSA71 {
+    const DEFAULT: Self = Self;
+}
 
 impl ColorFmt for GSA71 {
     type ColorType = GSA;

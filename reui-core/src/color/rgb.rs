@@ -1,3 +1,4 @@
+use crate::{ConstDefault};
 use super::{ColorFmt, ColorGet, ColorSet, GS};
 
 /// RGB
@@ -62,6 +63,10 @@ impl Into<GS> for RGB {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct RGB332;
 
+impl ConstDefault for RGB332 {
+    const DEFAULT: Self = Self;
+}
+
 impl ColorFmt for RGB332 {
     type ColorType = RGB;
     type ColorBits = typenum::U8;
@@ -97,6 +102,10 @@ impl ColorSet for RGB332 {
 /// `0bRRRRGGGG 0bBBBBRRRR 0bGGGGBBBB ...`
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct RGB444;
+
+impl ConstDefault for RGB444 {
+    const DEFAULT: Self = Self;
+}
 
 impl ColorFmt for RGB444 {
     type ColorType = RGB;
@@ -159,6 +168,10 @@ impl ColorSet for RGB444 {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct RGB565;
 
+impl ConstDefault for RGB565 {
+    const DEFAULT: Self = Self;
+}
+
 impl ColorFmt for RGB565 {
     type ColorType = RGB;
     type ColorBits = typenum::U16;
@@ -197,6 +210,10 @@ impl ColorSet for RGB565 {
 /// RGB with 8 bits per component
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
 pub struct RGB888;
+
+impl ConstDefault for RGB888 {
+    const DEFAULT: Self = Self;
+}
 
 impl ColorFmt for RGB888 {
     type ColorType = RGB;

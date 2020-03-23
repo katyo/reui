@@ -41,3 +41,8 @@ pub use self::color::*;
 pub use self::pixel::*;
 pub use self::font::*;
 pub use self::draw::*;
+
+/// Constant default value
+pub trait ConstDefault {
+    const DEFAULT: Self;
+}
