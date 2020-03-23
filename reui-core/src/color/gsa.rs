@@ -238,3 +238,38 @@ impl ColorSet for GSA71 {
         buffer[index] = (v & (0b1111111 << 1)) | (a >> (8 - 1));
     }
 }
+
+/// 8-bit grayscale color with 8-bit alpha channel
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub struct GSA88;
+
+impl ConstDefault for GSA88 {
+    const DEFAULT: Self = Self;
+}
+
+impl ColorFmt for GSA88 {
+    type ColorType = GSA;
+    type ColorBits = typenum::U16;
+
+    fn num_colors(&self, buffer: &[u8]) -> usize {
+        buffer.len() / 2
+    }
+}
+
+impl ColorGet for GSA88 {
+    fn get_color(&self, buffer: &[u8], index: usize) -> Self::ColorType {
+        let i = index * 2;
+        Self::ColorType {
+            v: buffer[i],
+            a: buffer[i + 1],
+        }
+    }
+}
+
+impl ColorSet for GSA88 {
+    fn set_color(&self, buffer: &mut [u8], index: usize, GSA { v, a }: Self::ColorType) {
+        let i = index * 2;
+        buffer[i] = v;
+        buffer[i + 1] = a;
+    }
+}
