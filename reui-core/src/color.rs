@@ -1,6 +1,7 @@
 mod def;
 mod buf;
 mod bw;
+mod raw;
 mod gs;
 mod gsa;
 mod rgb;
@@ -18,6 +19,7 @@ pub use self::rgba::RGBA;
 
 pub mod format {
     pub use super::bw::*;
+    pub use super::raw::*;
     pub use super::gs::*;
     pub use super::gsa::*;
     pub use super::rgb::*;
