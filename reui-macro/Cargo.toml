@@ -18,6 +18,10 @@ quote = "^1"
 bdf = "^0.5"
 png = "^0.16"
 
+[dependencies.reui-core]
+version = "^0.1"
+path = "../reui-core"
+
 [dev-dependencies.reui]
 version = "^0.1"
 path = "../reui"

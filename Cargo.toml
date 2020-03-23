@@ -1,5 +1,6 @@
 [workspace]
 members = [
-  "reui",
+  "reui-core",
   "reui-macro",
+  "reui",
 ]
